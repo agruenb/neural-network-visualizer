@@ -3,7 +3,7 @@ from tkinter import ttk
 
 def make_window():
     root = Tk()
-    root.resizable(width=False, height=False)
+    #root.resizable(width=False, height=False)
     root.title("AAA Neural Network")
 
     wrapper = ttk.Frame(root, padding=0)
