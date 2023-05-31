@@ -12,11 +12,11 @@ def construct_controls(controls, neuralNetwork, repaint_function):
             if i == 0:
                 def build_on_input_change(node):
                     def on_input_change(value):
-                        node.input_value = round(float(value), 3)
+                        node.value = round(float(value), 3)
                         repaint_function()
                     return on_input_change
                 ttk.Label(controls, text="Input "+str(j)).grid(column=0, row=control_num*2)
-                ttk.Scale(controls, from_=-1, to=1, orient="horizontal", command=build_on_input_change(node)).grid(column=0, row= control_num*2+1)
+                ttk.Scale(controls, value=node.value, from_=-1, to=1, orient="horizontal", command=build_on_input_change(node)).grid(column=0, row= control_num*2+1)
                 control_num += 1
             else:
                 for k in range(0, len(neuralNetwork.layers[i-1])):
@@ -26,7 +26,7 @@ def construct_controls(controls, neuralNetwork, repaint_function):
                             repaint_function()
                         return on_input_change
                     ttk.Label(controls, text="Weight L"+str(i)+" "+str(k+1)+"."+str(j+1)).grid(column=0, row=control_num*2)
-                    ttk.Scale(controls, from_=-1, to=1, orient="horizontal", command=build_on_input_change(node, k)).grid(column=0, row= control_num*2+1)
+                    ttk.Scale(controls, value=node.weights[k], from_=-1, to=1, orient="horizontal", command=build_on_input_change(node, k)).grid(column=0, row= control_num*2+1)
                     control_num += 1
     #bias
     for i in range(1, len(neuralNetwork.layers)):
@@ -36,7 +36,7 @@ def construct_controls(controls, neuralNetwork, repaint_function):
                 repaint_function()
             return on_input_change
         ttk.Label(controls, text="Bias "+str(i)).grid(column=0, row=control_num*2)
-        ttk.Scale(controls, from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
+        ttk.Scale(controls, value=neuralNetwork.biases[i], from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
         control_num += 1
     #output
     for i in range(0, len(neuralNetwork.layers[len(neuralNetwork.layers) -1])):
@@ -46,5 +46,6 @@ def construct_controls(controls, neuralNetwork, repaint_function):
                 repaint_function()
             return on_input_change
         ttk.Label(controls, text="Output "+str(i)).grid(column=0, row=control_num*2)
-        ttk.Scale(controls, from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
+        ttk.Scale(controls, value=neuralNetwork.targets[i], from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
         control_num += 1
+    print("TWO observations TODO")

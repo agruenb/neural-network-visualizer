@@ -3,10 +3,10 @@ import math
 
 def paintNN(canvas, neuralNetwork):
 
-    nnOffset = 100
-    ballSize = 100
-    ballPaddingX = 180
-    ballPaddingY = 160
+    nnOffset = 50
+    ballSize = 80
+    ballPaddingX = 240
+    ballPaddingY = 140
     text_size = 14
     text_position = 0.64
 
@@ -36,6 +36,11 @@ def paintNN(canvas, neuralNetwork):
                 "x":x,
                 "y":y
             })
+            #paint value
+            ball_centoid = ball_centoids[i][j]
+            node_value = str(round(neuralNetwork.layers[i][j].value, 3))
+            canvas.create_text(ball_centoid.get("x"), ball_centoid.get("y"), text=node_value, fill = text_color, font=("Arial", text_size)) 
+
     #lines & weights
     for i in range(0, len(ball_centoids) - 1):
         # biases
@@ -45,9 +50,6 @@ def paintNN(canvas, neuralNetwork):
         for j in range(0, len(ball_centoids[i])):
             ball_centoid = ball_centoids[i][j]
             out_x = ball_centoid.get("x") + ballSize/2
-            #paint input
-            if i == 0:
-                canvas.create_text(ball_centoid.get("x"), ball_centoid.get("y"), text=str(neuralNetwork.layers[i][j].input_value), fill = text_color, font=("Arial", text_size)) 
             #connect to each ball of next layer
             for k in range(0, len(ball_centoids[i + 1])):
                 #connecting line
@@ -71,7 +73,7 @@ def paintNN(canvas, neuralNetwork):
                 weight = str(neuralNetwork.layers[i + 1][k].weights[j])
                 canvas.create_text(text_start_x + 20, text_start_y, text=" = "+weight, fill = text_color, font=("Arial", text_size), anchor="w")
     #outputs
-    for i in range(0, len(neuralNetwork.layers[len(neuralNetwork.layers)-1])):
+    for i in range(0, len(neuralNetwork.targets)):
         last_line = len(neuralNetwork.layers)-1
-        text = str(neuralNetwork.layers[last_line][i].input_value)
-        canvas.create_text(ball_centoids[last_line][i].get("x") + ballSize/2 + 20, ball_centoids[last_line][i].get("y"), text=text, font=("Arial", text_size))
+        text = str(neuralNetwork.targets[i])
+        canvas.create_text(ball_centoids[last_line][i].get("x") + ballSize/2 + 20, ball_centoids[last_line][i].get("y"), text=text, font=("Arial", text_size), anchor="w")

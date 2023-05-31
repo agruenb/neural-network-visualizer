@@ -1,7 +1,7 @@
 class Node:
 
     weights = []
-    input_value = 1
+    value = 1.0
     non_linear_transformer = lambda x: x
     
     def __init__(self, weights, non_linear_transformer):
@@ -15,5 +15,7 @@ class Node:
             raise ValueError("Node number of inputs does not match length of weights")
         for index in range(0, len(inputs)):
             weighted_sum += self.weights[index]*inputs[index]
-        return self.non_linear_transformer(weighted_sum + bias)
+        output = self.non_linear_transformer(weighted_sum + bias)
+        self.value = output
+        return output
 
