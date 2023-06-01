@@ -6,15 +6,17 @@ from nn_controls import construct_controls
 from back_prop import back_propagation
 
 def main():
-    nn = NeuralNetwork([1,2, 1])
+    target_values = [2, 2]
+    nn = NeuralNetwork([2,2, 2])
     root, canvas, controls = make_window()
     nn.comp()
-    paintNN(canvas, nn)
+    derivatives_weights, derivatives_biases = back_propagation(nn, target_values, 1)
+    paintNN(canvas, nn, derivatives_weights, derivatives_biases)
     def repaint_function():
         nn.comp()
         canvas.delete("all")
-        paintNN(canvas, nn)
-        back_propagation(nn)
+        derivatives_weights, derivatives_biases = back_propagation(nn, target_values, 1)
+        paintNN(canvas, nn, derivatives_weights, derivatives_biases)
     
     construct_controls(controls, nn, repaint_function)
     root.mainloop()

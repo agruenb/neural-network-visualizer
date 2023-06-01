@@ -1,18 +1,46 @@
 import math
 
-
-def back_propagation(neuralNetwork):
-    learning_rate = 1
-    output_layer = neuralNetwork.layers[len(neuralNetwork.layers) - 1]
-    y = neuralNetwork.targets
-    wL = 0.5
-    aL0 = 1.5
-    bL = 1
-    sigma = derivative_relu
-    zL = wL * aL0 + bL
-    #aL = sigma(zL)
-    print(derivative_cost_w(neuralNetwork, 2, 0, 0, 2))
-    weights_adjustments = [[]]
+#only works with layers [2,2,2]
+def back_propagation(neuralNetwork, target_values,  learning_rate):
+    true_values = target_values
+    derivative_vector_weights = []
+    for layerI in range(1, len(neuralNetwork.layers)):
+        derivative_vector_weights.append([])
+        for nodeJ in range(0, len(neuralNetwork.layers[layerI])):
+            derivative_vector_weights[layerI-1].append([])
+            for weightK in range(0, len(neuralNetwork.layers[layerI][nodeJ].weights)):
+                if layerI == 1:
+                    d0 = derivative_wm1(neuralNetwork, 2, 0, nodeJ, weightK, true_values)
+                    d1 = derivative_wm1(neuralNetwork, 2, 1, nodeJ, weightK, true_values)
+                    derivative_vector_weights[layerI - 1][nodeJ].append(((d0 + d1)/2)*learning_rate)
+                elif layerI == 2:
+                    d0 = derivative_w(neuralNetwork, 2, nodeJ, weightK, true_values)
+                    derivative_vector_weights[layerI - 1][nodeJ].append(d0*learning_rate)
+                else:
+                    raise ValueError("No deeper that 2 allowed")
+    derivative_vector_biases = []
+    for layerI in range(1, len(neuralNetwork.layers)):
+        if layerI == 1:
+            d0 = derivative_bm1(neuralNetwork, 2, 0, 0, true_values)
+            d1 = derivative_bm1(neuralNetwork, 2, 0, 1, true_values)
+            d2 = derivative_bm1(neuralNetwork, 2, 1, 0, true_values)
+            d3 = derivative_bm1(neuralNetwork, 2, 1, 1, true_values)
+            derivative_vector_biases.append(((d0 + d1 + d2 + d3)/4)*learning_rate)
+        elif layerI == 2:
+            d0 = derivative_b(neuralNetwork, 2, 0, true_values)
+            d1 = derivative_b(neuralNetwork, 2, 1, true_values)
+            d2 = derivative_b(neuralNetwork, 2, 0, true_values)
+            d3 = derivative_b(neuralNetwork, 2, 1, true_values)
+            derivative_vector_biases.append(((d0 + d1 + d2 + d3)/4)*learning_rate)
+        else:
+            raise ValueError("No deeper that 2 allowed")
+    #print(derivative_vector_weights)
+    #print(derivative_w(neuralNetwork, 2, 0, 0, 2))
+    #print(derivative_w(neuralNetwork, 2, 0, 1, 2))
+    #print(derivative_b(neuralNetwork, 2, 0, 1))
+    #print(derivative_aLm1(neuralNetwork, 2, 0, 0, 1))
+    #print(derivative_aLm1(neuralNetwork, 2, 0, 1, 1))
+    return derivative_vector_weights, derivative_vector_biases
 
 def zL(nn, layerI, nodeJ):
     node = nn.layers[layerI][nodeJ]
@@ -30,8 +58,43 @@ def aL(nn, layerI, nodeJ):
     return max(0, zL(nn, layerI, nodeJ))
 
 #calculates the effect of weightK of nodeJ on the cost (node.value - true value)**2
-def derivative_cost_w(nn, layerI, nodeJ, weightK, true):
-    return aL(nn, layerI-1, weightK) * derivative_relu( zL(nn, layerI, nodeJ) ) * 2 * ( aL(nn, layerI, nodeJ) - true)
+def derivative_w(nn, layerI, nodeJ, weightK, true_values):
+    return aL(nn, layerI-1, weightK) * derivative_relu( zL(nn, layerI, nodeJ) ) * derivative_C0(nn, nodeJ, true_values)
+
+def derivative_b(nn, nodeLayerI, nodeJ, true_values):
+    return derivative_relu( zL(nn, nodeLayerI, nodeJ) ) * derivative_C0_multi(nn, true_values)
+
+#not useful since aL cannot be adjusted
+def derivative_aLm1(nn, layerI, nodeJ, target_nodeJ, true_values):
+    weight = nn.layers[layerI][nodeJ].weights[target_nodeJ]
+    return weight * derivative_relu( zL(nn, layerI, nodeJ) ) * derivative_C0_multi(nn, true_values)
+
+def derivative_bm1(nn, nodeLayerI, nodeJ, target_nodeJ, true_values):
+    weight = nn.layers[nodeLayerI][nodeJ].weights[target_nodeJ]
+    zLm1 = zL(nn, nodeLayerI - 1, target_nodeJ)
+    return derivative_relu(zLm1) * weight * derivative_relu( zL(nn, nodeLayerI, nodeJ) ) * derivative_C0_multi(nn, true_values)
+
+#nodeLayer: output node layer, nodeJ: output node, target node: node in middle layers, target_weight: node in first layer
+def derivative_wm1(nn, nodeLayerI, nodeJ, target_nodeJ, target_weight, true_values):
+    weight = nn.layers[nodeLayerI][nodeJ].weights[target_nodeJ]
+    zLm1 = zL(nn, nodeLayerI - 1, target_nodeJ)
+    return aL(nn, nodeLayerI - 1, target_weight) * derivative_relu(zLm1) * weight * derivative_relu( zL(nn, nodeLayerI, nodeJ) ) * derivative_C0_multi(nn, true_values)
+
+def derivative_C0(nn, nodeJ, true_values):
+    last_layer = nn.layers[-1]
+    if len(last_layer) != len(true_values):
+        raise ValueError("Len do not match")
+    return 2 * (last_layer[nodeJ].value - true_values[nodeJ])
+
+def derivative_C0_multi(nn, true_values):
+    last_layer = nn.layers[-1]
+    if len(last_layer) != len(true_values):
+        raise ValueError("Len do not match")
+    error_sum = 0
+    for i in range(0, len(last_layer)):
+        error_sum += 2 * (last_layer[i].value - true_values[i])
+    return error_sum
+
     
     
 
