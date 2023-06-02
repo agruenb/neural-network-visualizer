@@ -3,7 +3,7 @@ from tkinter import ttk
 def on_slider_change(param):
     return 0
 
-def construct_controls(controls, neuralNetwork, repaint_function):
+def construct_controls(controls, neuralNetwork, repaint_function, target_values_1, target_values_2):
     
     control_num = 0
     for i in range(0, len(neuralNetwork.layers)):
@@ -36,16 +36,26 @@ def construct_controls(controls, neuralNetwork, repaint_function):
                 repaint_function()
             return on_input_change
         ttk.Label(controls, text="Bias "+str(i)).grid(column=0, row=control_num*2)
-        ttk.Scale(controls, value=neuralNetwork.biases[i], from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
+        ttk.Scale(controls, value=neuralNetwork.biases[i], from_=0, to=2, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
         control_num += 1
-    #output
-    for i in range(0, len(neuralNetwork.layers[len(neuralNetwork.layers) -1])):
-        def build_on_input_change(neuralNetwork, target_index):
+    #output 1
+    for i in range(0, len(target_values_1)):
+        def build_on_input_change(target_index):
             def on_input_change(value):
-                neuralNetwork.targets[target_index] = round(float(value), 3)
+                target_values_1[target_index] = round(float(value), 3)
                 repaint_function()
             return on_input_change
-        ttk.Label(controls, text="Output "+str(i)).grid(column=0, row=control_num*2)
-        ttk.Scale(controls, value=neuralNetwork.targets[i], from_=-1, to=1, orient="horizontal", command=build_on_input_change(neuralNetwork, i)).grid(column=0, row= control_num*2+1)
+        ttk.Label(controls, text="Sample 1 Output "+str(i)).grid(column=0, row=control_num*2)
+        ttk.Scale(controls, value=target_values_1[i], from_=0, to=2, orient="horizontal", command=build_on_input_change(i)).grid(column=0, row= control_num*2+1)
+        control_num += 1
+    #output 2
+    for i in range(0, len(target_values_2)):
+        def build_on_input_change(target_index):
+            def on_input_change(value):
+                target_values_2[target_index] = round(float(value), 3)
+                repaint_function()
+            return on_input_change
+        ttk.Label(controls, text="Sample 2 Output "+str(i)).grid(column=0, row=control_num*2)
+        ttk.Scale(controls, value=target_values_2[i], from_=0, to=2, orient="horizontal", command=build_on_input_change(i)).grid(column=0, row= control_num*2+1)
         control_num += 1
     print("TWO observations TODO")

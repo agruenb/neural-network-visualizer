@@ -29,9 +29,7 @@ def back_propagation(neuralNetwork, target_values,  learning_rate):
         elif layerI == 2:
             d0 = derivative_b(neuralNetwork, 2, 0, true_values)
             d1 = derivative_b(neuralNetwork, 2, 1, true_values)
-            d2 = derivative_b(neuralNetwork, 2, 0, true_values)
-            d3 = derivative_b(neuralNetwork, 2, 1, true_values)
-            derivative_vector_biases.append(((d0 + d1 + d2 + d3)/4)*learning_rate)
+            derivative_vector_biases.append(((d0 + d1)/2)*learning_rate)
         else:
             raise ValueError("No deeper that 2 allowed")
     #print(derivative_vector_weights)
@@ -62,7 +60,7 @@ def derivative_w(nn, layerI, nodeJ, weightK, true_values):
     return aL(nn, layerI-1, weightK) * derivative_relu( zL(nn, layerI, nodeJ) ) * derivative_C0(nn, nodeJ, true_values)
 
 def derivative_b(nn, nodeLayerI, nodeJ, true_values):
-    return derivative_relu( zL(nn, nodeLayerI, nodeJ) ) * derivative_C0_multi(nn, true_values)
+    return derivative_relu( zL(nn, nodeLayerI, nodeJ) ) * derivative_C0(nn, nodeJ, true_values)
 
 #not useful since aL cannot be adjusted
 def derivative_aLm1(nn, layerI, nodeJ, target_nodeJ, true_values):

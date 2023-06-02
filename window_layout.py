@@ -9,7 +9,7 @@ def make_window():
     wrapper = ttk.Frame(root, padding=0)
     wrapper.pack()
 
-    canvas_width = 800
+    canvas_width = 1000
     canvas_height = 600
     canvas = Canvas(wrapper, width=canvas_width, height=canvas_height)
     canvas.pack(side="left")
