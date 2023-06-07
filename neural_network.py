@@ -3,11 +3,9 @@ import numpy as np
 
 class NeuralNetwork:
 
-    layers = []
-    biases = []
-    targets = []
-
     def __init__(self, layerStructure):
+        self.layers = []
+        self.biases = []
         self.constructNodes(layerStructure)
         self.targets = list(np.ones(layerStructure[len(layerStructure) - 1]))
 

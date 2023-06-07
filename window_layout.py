@@ -9,12 +9,12 @@ def make_window():
     wrapper = ttk.Frame(root, padding=0)
     wrapper.pack()
 
-    canvas_width = 1000
+    canvas_width = 880
     canvas_height = 600
     canvas = Canvas(wrapper, width=canvas_width, height=canvas_height)
     canvas.pack(side="left")
 
-    controls = ttk.Frame(wrapper)
-    controls.pack(side="right", padx=5, pady=5)
+    controlsWrapper = ttk.Frame(wrapper)
+    controlsWrapper.pack(side="right", padx=5, pady=5)
 
-    return root, canvas, controls
+    return root, canvas, controlsWrapper

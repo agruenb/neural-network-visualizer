@@ -1,8 +1,8 @@
 import math
 
-def paintNN(canvas, neuralNetwork, derivatives_weights, derivatives_biases, target_values_1):
+def paintNN(canvas, neuralNetwork, derivatives_weights, derivatives_biases, target_values_1, target_values_2, neuralNetwork_2):
 
-    nnOffset = 100
+    nnOffset = 80
     ballSize = 80
     ballPaddingX = 240
     ballPaddingY = 140
@@ -45,7 +45,7 @@ def paintNN(canvas, neuralNetwork, derivatives_weights, derivatives_biases, targ
         # biases
         layer_bias = neuralNetwork.biases[i+1]
         offset = (ballSize+ballPaddingX)*i
-        canvas.create_text(offset + nnOffset + ballPaddingX/2, nnOffset-ballSize/2, text="b"+str(i+1)+"= "+str(layer_bias), fill = text_color, font=("Arial", text_size))
+        canvas.create_text(offset + nnOffset + ballPaddingX/2, nnOffset-ballSize/2, text="b"+str(i+1)+"= "+str(layer_bias), font=("Arial", text_size))
         #bias change
         bias_change = round(-derivatives_biases[i], 3)
         canvas.create_text(offset + nnOffset + ballPaddingX/2, nnOffset-ballSize/2 + text_size + 4, text="upd "+str(bias_change), fill = "red", font=("Arial", text_size))
@@ -68,12 +68,12 @@ def paintNN(canvas, neuralNetwork, derivatives_weights, derivatives_biases, targ
                 #create text
                 text_start_x = out_x + middle_point_vctr_x*text_position + text_shift_x
                 text_start_y = ball_centoid.get("y") + middle_point_vctr_y*text_position + text_shift_y
-                canvas.create_text(text_start_x, text_start_y, text="w", fill = text_color, font=("Arial", text_size))
-                canvas.create_text(text_start_x + 13, text_start_y + 5, text=str(j+1)+str(k+1), fill = text_color, font=("Arial", int(text_size*0.7)))
-                canvas.create_text(text_start_x + 13, text_start_y - 5, text="L" + str(i+1), fill = text_color, font=("Arial", int(text_size*0.7)))
+                canvas.create_text(text_start_x, text_start_y, text="w", font=("Arial", text_size))
+                canvas.create_text(text_start_x + 13, text_start_y + 5, text=str(j+1)+str(k+1), font=("Arial", int(text_size*0.7)))
+                canvas.create_text(text_start_x + 13, text_start_y - 5, text="L" + str(i+1), font=("Arial", int(text_size*0.7)))
                 #node weights
                 weight = str(neuralNetwork.layers[i + 1][k].weights[j])
-                canvas.create_text(text_start_x + 20, text_start_y, text=" = "+weight, fill = text_color, font=("Arial", text_size), anchor="w")
+                canvas.create_text(text_start_x + 20, text_start_y, text=" = "+weight, font=("Arial", text_size), anchor="w")
                 #node derivative
                 #switch k and j since backpropagation orders by right nodes and this by left nodes
                 der = round(-derivatives_weights[i][k][j], 3)
@@ -82,5 +82,12 @@ def paintNN(canvas, neuralNetwork, derivatives_weights, derivatives_biases, targ
     #outputs
     for i in range(0, len(target_values_1)):
         last_line = len(neuralNetwork.layers)-1
-        text = str(target_values_1[i])
+        text = "y" + str(i+1) + " = " + str(target_values_1[i])
         canvas.create_text(ball_centoids[last_line][i].get("x") + ballSize/2 + 20, ball_centoids[last_line][i].get("y"), text=text, font=("Arial", text_size), anchor="w")
+
+    #Sample 2
+    canvas.create_text(nnOffset, 400, text="Sample 2:", font=("Arial", text_size), anchor="w")
+    canvas.create_text(nnOffset, 400 + text_size + 4, text="Input 1: "+str(neuralNetwork_2.layers[0][0].value), font=("Arial", text_size), anchor="w")
+    canvas.create_text(nnOffset, 400 + text_size*2 + 4*2, text="Input 2: "+str(neuralNetwork_2.layers[0][1].value), font=("Arial", text_size), anchor="w")
+    canvas.create_text(nnOffset, 400 + text_size*3 + 4*3, text="y1: "+str(target_values_2[0]), font=("Arial", text_size), anchor="w")
+    canvas.create_text(nnOffset, 400 + text_size*4 + 4*4, text="y2: "+str(target_values_2[1]), font=("Arial", text_size), anchor="w")

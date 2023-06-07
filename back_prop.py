@@ -93,12 +93,6 @@ def derivative_C0_multi(nn, true_values):
         error_sum += 2 * (last_layer[i].value - true_values[i])
     return error_sum
 
-    
-    
-
-
-    
-
 def derivative_relu(x):
     """ if x == 0:
         raise ValueError("Derivation of Relu is undefined for x = 0") """
