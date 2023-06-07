@@ -58,7 +58,7 @@ def construct_controls(controls, neuralNetwork, neuralNetwork2, repaint_function
                 target_values_1[target_index] = round(float(value), 3)
                 repaint_function()
             return on_input_change
-        ttk.Label(controls_right, text="Sample 1 Output "+str(i+1)).grid(column=0, row=control_num_r*2)
+        ttk.Label(controls_right, text="Sample 1 y"+str(i+1)).grid(column=0, row=control_num_r*2)
         ttk.Scale(controls_right, value=target_values_1[i], from_=0, to=2, orient="horizontal", command=build_on_input_change(i)).grid(column=0, row= control_num_r*2+1)
         control_num_r += 1
     var = tk.IntVar()
@@ -78,7 +78,7 @@ def construct_controls(controls, neuralNetwork, neuralNetwork2, repaint_function
                 node.value = round(float(value), 3)
                 repaint_function(var.get())
             return on_input_change
-        ttk.Label(controls_right, text="Sample 2 input "+str(i+1)).grid(column=0, row=control_num_r*2)
+        ttk.Label(controls_right, text="Sample 2 Input "+str(i+1)).grid(column=0, row=control_num_r*2)
         ttk.Scale(controls_right, value=input_values_2[i], from_=0, to=1, orient="horizontal", command=build_on_input_change(node)).grid(column=0, row= control_num_r*2+1)
         control_num_r += 1
     #output 2
@@ -88,6 +88,6 @@ def construct_controls(controls, neuralNetwork, neuralNetwork2, repaint_function
                 target_values_2[target_index] = round(float(value), 3)
                 repaint_function(var.get())
             return on_input_change
-        ttk.Label(controls_right, text="Sample 2 Output "+str(i+1)).grid(column=0, row=control_num_r*2)
+        ttk.Label(controls_right, text="Sample 2 y"+str(i+1)).grid(column=0, row=control_num_r*2)
         ttk.Scale(controls_right, value=target_values_2[i], from_=0, to=2, orient="horizontal", command=build_on_input_change(i)).grid(column=0, row= control_num_r*2+1)
         control_num_r += 1
