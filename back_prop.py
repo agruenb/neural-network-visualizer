@@ -32,12 +32,6 @@ def back_propagation(neuralNetwork, target_values,  learning_rate):
             derivative_vector_biases.append(((d0 + d1)/2)*learning_rate)
         else:
             raise ValueError("No deeper that 2 allowed")
-    #print(derivative_vector_weights)
-    #print(derivative_w(neuralNetwork, 2, 0, 0, 2))
-    #print(derivative_w(neuralNetwork, 2, 0, 1, 2))
-    #print(derivative_b(neuralNetwork, 2, 0, 1))
-    #print(derivative_aLm1(neuralNetwork, 2, 0, 0, 1))
-    #print(derivative_aLm1(neuralNetwork, 2, 0, 1, 1))
     return derivative_vector_weights, derivative_vector_biases
 
 def zL(nn, layerI, nodeJ):
